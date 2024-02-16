@@ -29,3 +29,19 @@ export const confirm_otp = async (admin_id, otp) => {
     };
   }
 };
+export const confirm_admin_email = async (admin_email) => {
+  const query = `*[_type == "admins" && admin_email == "${admin_email}"]._id`;
+  const data = await sanityClient.fetch(query);
+  const _id = data[0];
+
+  if (_id) {
+    return {
+      status: "CONFIRMED",
+      _id,
+    };
+  } else {
+    return {
+      status: "REJECTED",
+    };
+  }
+};

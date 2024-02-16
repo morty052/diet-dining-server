@@ -1,5 +1,9 @@
 import express from "../../lib/express.js";
-import { generate_otp, confirm_otp } from "./features/generate-otp.js";
+import {
+  generate_otp,
+  confirm_otp,
+  confirm_admin_email,
+} from "./features/generate-otp.js";
 
 const adminRouter = express.Router();
 
@@ -23,6 +27,14 @@ adminRouter.get("/confirm-otp", async (req, res) => {
   res.send({
     status,
   });
+});
+adminRouter.get("/confirm-admin-email", async (req, res) => {
+  const { admin_email } = req.query;
+
+  console.log(admin_email);
+
+  const status = await confirm_admin_email(admin_email);
+  res.send(status);
 });
 
 export default adminRouter;
