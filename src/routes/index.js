@@ -1,4 +1,4 @@
-import restaurantRouter from "./restaurant-router.js";
+import storesRouter from "./stores-router/stores-router.js";
 import adminRouter from "./admin-router/admin-router.js";
 
-export { restaurantRouter, adminRouter };
+export { storesRouter, adminRouter };

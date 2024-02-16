@@ -45,3 +45,20 @@ export const confirm_admin_email = async (admin_email) => {
     };
   }
 };
+
+export const get_current_admin = async (admin_email) => {
+  const query = `*[_type == "admins" && admin_email == "${admin_email}"]`;
+  const data = await sanityClient.fetch(query);
+  const _id = data[0];
+
+  if (_id) {
+    return {
+      status: "CONFIRMED",
+      data,
+    };
+  } else {
+    return {
+      status: "REJECTED",
+    };
+  }
+};

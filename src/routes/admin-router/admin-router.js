@@ -3,12 +3,21 @@ import {
   generate_otp,
   confirm_otp,
   confirm_admin_email,
+  get_current_admin,
 } from "./features/generate-otp.js";
 
 const adminRouter = express.Router();
 
 adminRouter.get("/", (req, res) => {
   res.send("reachead restaurant young dev");
+});
+
+adminRouter.get("/get-admin", async (req, res) => {
+  const { admin_email } = req.query;
+  const otp = await get_current_admin(admin_email);
+  res.send({
+    otp,
+  });
 });
 
 adminRouter.get("/get-otp", async (req, res) => {
