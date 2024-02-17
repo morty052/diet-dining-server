@@ -16,4 +16,16 @@ export function urlFor(source) {
   return builder.image(source);
 }
 
+export async function uploadFile(file_url) {
+  try {
+    const _id = (await sanityClient.assets.upload(file_url))._id;
+    return {
+      status: "UPLOADED",
+      _id,
+    };
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export default sanityClient;
