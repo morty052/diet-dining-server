@@ -1,5 +1,8 @@
 import express from "../../lib/express.js";
-import { get_all_stores } from "./features/fetch-store-actions.js";
+import {
+  get_all_stores,
+  get_single_store,
+} from "./features/fetch-store-actions.js";
 import { create_store } from "./features/store-onboarding-actions.js";
 
 const storesRouter = express.Router();
@@ -12,6 +15,20 @@ storesRouter.get("/get-all", async (req, res) => {
   const stores = await get_all_stores();
   res.send(stores);
 });
+
+storesRouter.get("/get-single", async (req, res) => {
+  try {
+    const { store_id } = req.query;
+    const store = await get_single_store(store_id);
+    res.send(store);
+  } catch (error) {
+    res.send({
+      status: "ERROR",
+      message: error,
+    });
+  }
+});
+
 storesRouter.get("/create", async (req, res) => {
   const { store_name, store_address, store_image, store_description } =
     req.query;

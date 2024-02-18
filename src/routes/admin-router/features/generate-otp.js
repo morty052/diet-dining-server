@@ -13,19 +13,31 @@ export const generate_otp = async (admin_id) => {
   }
 };
 
-export const confirm_otp = async (admin_id, otp) => {
-  console.log(otp);
-  const query = `*[_type == "admins" && _id == "${admin_id}"].admin_active_otp`;
-  const data = await sanityClient.fetch(query);
-  const active_otp = data[0];
+const reset_otp = async (admin_id) => {
+  await sanityClient.patch(admin_id).set({ admin_active_otp: "" }).commit();
+};
 
-  if (otp == active_otp) {
+export const confirm_otp = async (admin_id, otp) => {
+  try {
+    console.log(otp);
+    const query = `*[_type == "admins" && _id == "${admin_id}"].admin_active_otp`;
+    const data = await sanityClient.fetch(query);
+    const active_otp = data[0];
+
+    if (otp == active_otp) {
+      reset_otp(admin_id);
+      return {
+        status: "CONFIRMED",
+      };
+    } else {
+      return {
+        status: "REJECTED",
+      };
+    }
+  } catch (error) {
+    console.error(error);
     return {
-      status: "CONFIRMED",
-    };
-  } else {
-    return {
-      status: "REJECTED",
+      status: "ERROR",
     };
   }
 };
