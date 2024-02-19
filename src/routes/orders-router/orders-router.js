@@ -17,7 +17,7 @@ ordersRouter.get("/get-all", async (req, res) => {
     });
   }
 });
-ordersRouter.get("/create", async (req, res) => {
+ordersRouter.post("/create", async (req, res) => {
   //   const { store_name, store_address, store_image, store_description } =
   //     req.query;
   //   const newStore = {
@@ -28,6 +28,7 @@ ordersRouter.get("/create", async (req, res) => {
   //     _type: "stores",
   //   };
   //   const status = await create_store(newStore);
+  console.log(req.body);
   res.send("c");
 });
 
