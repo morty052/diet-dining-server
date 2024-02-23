@@ -18,17 +18,7 @@ ordersRouter.get("/get-all", async (req, res) => {
   }
 });
 ordersRouter.post("/create", async (req, res) => {
-  //   const { store_name, store_address, store_image, store_description } =
-  //     req.query;
-  //   const newStore = {
-  //     store_name,
-  //     store_address,
-  //     store_image,
-  //     store_description,
-  //     _type: "stores",
-  //   };
-  //   const status = await create_store(newStore);
-  console.log(req.body);
+  console.log("this is body", req.body);
   res.send("c");
 });
 
