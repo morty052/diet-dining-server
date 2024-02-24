@@ -1,4 +1,5 @@
 import express from "../../lib/express.js";
+import { create_order } from "./features/create-order.js";
 import { get_all_orders } from "./features/fetch-orders.js";
 
 const ordersRouter = express.Router();
@@ -18,7 +19,8 @@ ordersRouter.get("/get-all", async (req, res) => {
   }
 });
 ordersRouter.post("/create", async (req, res) => {
-  console.log("this is body", req.body);
+  const { vendors } = req.body;
+  await create_order("bda93bf7-3060-46fd-bee4-692cabba7299", vendors[0]);
   res.send("c");
 });
 
