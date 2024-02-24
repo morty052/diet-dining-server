@@ -52,6 +52,12 @@ export const get_single_store = async (store_id) => {
         };
       });
 
+      const categories = store.menu_categories.map((category) => {
+        return {
+          title: category.title,
+        };
+      });
+
       console.log(menu);
 
       return {
@@ -59,6 +65,7 @@ export const get_single_store = async (store_id) => {
         store_logo,
         store_image,
         menu,
+        categories,
       };
     });
     console.log("called");
