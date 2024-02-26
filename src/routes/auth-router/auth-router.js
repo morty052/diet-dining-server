@@ -2,7 +2,7 @@ import express from "../../lib/express.js";
 
 const authRouter = express.Router();
 
-storesRouter.get("/", (req, res) => {
+authRouter.get("/", (req, res) => {
   res.send("reachead restaurant young dev");
 });
 
