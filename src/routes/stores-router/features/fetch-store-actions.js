@@ -59,8 +59,6 @@ export const get_single_store = async (store_id) => {
         };
       });
 
-      console.log(menu);
-
       return {
         ...store,
         store_logo,
@@ -69,7 +67,7 @@ export const get_single_store = async (store_id) => {
         categories,
       };
     });
-    console.log("called");
+
     return stores;
   } catch (error) {
     console.error(error);
@@ -78,15 +76,17 @@ export const get_single_store = async (store_id) => {
 
 export const get_single_product = async (product_id) => {
   try {
-    const query = `*[_type == "products" && _id == "${product_id}"]{..., vendor -> {store_name, _id}}`;
+    const query = `*[_type == "products" && _id == "${product_id}"]{..., vendor -> {store_name, _id, store_logo}}`;
     const data = await sanityClient.fetch(query);
 
     const product = data?.[0];
-
+    console.log("called");
     return {
       ...product,
-      // vendor: product.vendor.store_name,
-      // vendor_id: product.vendor._id,
+      vendor: {
+        ...product.vendor,
+        store_logo: urlFor(product.vendor.store_logo).url(),
+      },
       image: urlFor(product.image).url(),
     };
   } catch (error) {
