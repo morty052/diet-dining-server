@@ -47,6 +47,7 @@ export const get_single_store = async (store_id) => {
           products: category.products.map((product) => ({
             ...product,
             vendor: store.store_name,
+            store_logo,
             image: urlFor(product.image).url(),
           })),
         };

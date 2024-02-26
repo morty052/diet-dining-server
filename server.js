@@ -5,6 +5,7 @@ import {
   adminRouter,
   utilityRouter,
   ordersRouter,
+  authRouter,
 } from "./src/routes/index.js";
 import cors from "cors";
 
@@ -24,6 +25,7 @@ app.use("/stores", storesRouter);
 app.use("/orders", ordersRouter);
 app.use("/admin", adminRouter);
 app.use("/utils", utilityRouter);
+app.use("/auth", authRouter);
 
 app.get("/", (req, res) => {
   res.send("reached me");
