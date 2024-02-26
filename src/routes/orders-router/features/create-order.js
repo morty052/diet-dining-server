@@ -25,11 +25,13 @@ export const create_order = async (store_id, newOrder) => {
     products,
   };
 
-  await sanityClient
-    .patch(store_id)
-    .setIfMissing({ store_orders: [] })
-    .insert("after", "store_orders[-1]", [newOrder])
-    .commit({ autoGenerateArrayKeys: true });
+  console.log(order);
+
+  // await sanityClient
+  //   .patch(store_id)
+  //   .setIfMissing({ store_orders: [] })
+  //   .insert("after", "store_orders[-1]", [newOrder])
+  //   .commit({ autoGenerateArrayKeys: true });
 
   await sanityClient.create(order, { autoGenerateArrayKeys: true });
 };

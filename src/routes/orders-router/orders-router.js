@@ -19,8 +19,8 @@ ordersRouter.get("/get-all", async (req, res) => {
   }
 });
 ordersRouter.post("/create", async (req, res) => {
-  const { vendors } = req.body;
-  await create_order("bda93bf7-3060-46fd-bee4-692cabba7299", vendors[0]);
+  const { vendor } = req.body;
+  await create_order("bda93bf7-3060-46fd-bee4-692cabba7299", vendor);
   res.send("c");
 });
 

@@ -3,6 +3,8 @@ import {
   get_all_stores,
   get_single_product,
   get_single_store,
+  get_stores_search_array,
+  get_product_search_array,
 } from "./features/fetch-store-actions.js";
 import { create_store } from "./features/store-onboarding-actions.js";
 
@@ -35,6 +37,30 @@ storesRouter.get("/get-single-product", async (req, res) => {
     const { product_id } = req.query;
     const product = await get_single_product(product_id);
     res.send(product);
+  } catch (error) {
+    res.send({
+      status: "ERROR",
+      message: error,
+    });
+  }
+});
+
+storesRouter.get("/search-stores", async (req, res) => {
+  try {
+    const stores = await get_stores_search_array();
+    res.send(stores);
+  } catch (error) {
+    res.send({
+      status: "ERROR",
+      message: error,
+    });
+  }
+});
+
+storesRouter.get("/search-products", async (req, res) => {
+  try {
+    const products = await get_product_search_array();
+    res.send(products);
   } catch (error) {
     res.send({
       status: "ERROR",
