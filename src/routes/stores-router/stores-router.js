@@ -6,7 +6,10 @@ import {
   get_stores_search_array,
   get_product_search_array,
 } from "./features/fetch-store-actions.js";
-import { create_store } from "./features/store-onboarding-actions.js";
+import {
+  create_store,
+  delete_store,
+} from "./features/store-onboarding-actions.js";
 
 const storesRouter = express.Router();
 
@@ -69,18 +72,23 @@ storesRouter.get("/search-products", async (req, res) => {
   }
 });
 
-storesRouter.get("/create", async (req, res) => {
-  const { store_name, store_address, store_image, store_description } =
-    req.query;
-  const newStore = {
-    store_name,
-    store_address,
-    store_image,
-    store_description,
-    _type: "stores",
-  };
-  const status = await create_store(newStore);
-  res.send(status);
+storesRouter.post("/create", async (req, res) => {
+  const newStore = req.body;
+
+  const _id = await create_store(newStore);
+
+  res.send({ _id });
+});
+
+storesRouter.get("/like", async (req, res) => {
+  const { user_id, item_id } = req.query;
+
+  res.send({ user_id, item_id });
+});
+
+storesRouter.get("/delete", async (req, res) => {
+  await delete_store();
+  res.send({ user_id: "item_id " });
 });
 
 export default storesRouter;

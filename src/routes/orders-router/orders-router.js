@@ -1,6 +1,7 @@
 import express from "../../lib/express.js";
 import { create_order } from "./features/create-order.js";
 import { get_all_orders } from "./features/fetch-orders.js";
+import { update_order_status } from "./features/update-order-status.js";
 
 const ordersRouter = express.Router();
 
@@ -22,6 +23,12 @@ ordersRouter.post("/create", async (req, res) => {
   const { vendor } = req.body;
   await create_order("bda93bf7-3060-46fd-bee4-692cabba7299", vendor);
   res.send("c");
+});
+ordersRouter.post("/update-status", async (req, res) => {
+  const { status, _id } = req.body;
+  console.log(req.body);
+  await update_order_status(_id, status);
+  res.send({ cool: "" });
 });
 
 export default ordersRouter;
