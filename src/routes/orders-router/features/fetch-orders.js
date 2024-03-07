@@ -22,3 +22,14 @@ export const get_all_orders = async () => {
     console.error(error);
   }
 };
+
+export const get_user_orders = async (user_id) => {
+  try {
+    const query = `*[_type == "orders" && references("${user_id}")]`;
+    const data = await sanityClient.fetch(query);
+
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};

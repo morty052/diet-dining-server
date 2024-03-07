@@ -1,8 +1,8 @@
 import sanityClient from "../../../lib/sanityClient.js";
 
-export const create_order = async (store_id, newOrder) => {
-  console.log(newOrder);
-  const products = newOrder.vendorItems?.map((item) => ({
+export const create_order = async ({ store_id, vendor, user_id }) => {
+  console.log(vendor);
+  const products = vendor.vendorItems?.map((item) => ({
     product_reference: {
       _type: "reference",
       _ref: item.item_id,
@@ -13,14 +13,18 @@ export const create_order = async (store_id, newOrder) => {
   const order = {
     _type: "orders",
     location: "bikini bottom",
-    total: newOrder.vendorTotal,
+    total: vendor.vendorTotal,
     status: {
       pending: true,
       completed: false,
     },
     vendor: {
       _type: "reference",
-      _ref: newOrder._id,
+      _ref: vendor._id,
+    },
+    user: {
+      _type: "reference",
+      _ref: user_id,
     },
     products,
   };
@@ -37,6 +41,12 @@ export const create_order = async (store_id, newOrder) => {
 
   await sanityClient
     .patch(affiliate_id)
+    .setIfMissing({ orders: [] })
+    .insert("after", "orders[-1]", [{ _type: "order", _ref: order_id }])
+    .commit({ autoGenerateArrayKeys: true });
+
+  await sanityClient
+    .patch(user_id)
     .setIfMissing({ orders: [] })
     .insert("after", "orders[-1]", [{ _type: "order", _ref: order_id }])
     .commit({ autoGenerateArrayKeys: true });

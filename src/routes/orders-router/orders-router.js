@@ -45,8 +45,12 @@ ordersRouter.get("/get-all", async (req, res) => {
   }
 });
 ordersRouter.post("/create", async (req, res) => {
-  const { vendor } = req.body;
-  await create_order("bda93bf7-3060-46fd-bee4-692cabba7299", vendor);
+  const { vendor, user_id } = req.body;
+  await create_order({
+    store_id: "bda93bf7-3060-46fd-bee4-692cabba7299",
+    user_id,
+    vendor,
+  });
   console.log("created");
   // sendPushNotification("ExponentPushToken[ruarKdODJs7pAeDo4pW58P]");
   res.send("c");
