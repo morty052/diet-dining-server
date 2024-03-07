@@ -28,4 +28,15 @@ export async function uploadFile(file_url) {
   }
 }
 
+export async function get_affiliate_store(affiliate_id) {
+  try {
+    const query = `*[_type == "affiliates" && _id == "${affiliate_id}"].store -> {_id}`;
+    const data = await sanityClient.fetch(query);
+    const _id = data?.[0]._id;
+    return _id;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export default sanityClient;

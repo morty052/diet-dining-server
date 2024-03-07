@@ -5,6 +5,31 @@ import { update_order_status } from "./features/update-order-status.js";
 
 const ordersRouter = express.Router();
 
+async function sendPushNotification(expoPushToken) {
+  const message = {
+    to: expoPushToken,
+    sound: "default",
+    title: "Order sent to vendor",
+    body: "Thanks for placing an order.",
+    data: { someData: "goes here" },
+  };
+
+  try {
+    await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Accept-encoding": "gzip, deflate",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(message),
+    });
+  } catch (error) {
+    console.log(error);
+  }
+  console.log("sent");
+}
+
 ordersRouter.get("/", (req, res) => {
   res.send("reachead restaurant young dev");
 });
@@ -22,6 +47,8 @@ ordersRouter.get("/get-all", async (req, res) => {
 ordersRouter.post("/create", async (req, res) => {
   const { vendor } = req.body;
   await create_order("bda93bf7-3060-46fd-bee4-692cabba7299", vendor);
+  console.log("created");
+  // sendPushNotification("ExponentPushToken[ruarKdODJs7pAeDo4pW58P]");
   res.send("c");
 });
 ordersRouter.post("/update-status", async (req, res) => {
