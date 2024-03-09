@@ -25,7 +25,7 @@ export const get_all_orders = async () => {
 
 export const get_user_orders = async (user_id) => {
   try {
-    const query = `*[_type == "orders" && references("${user_id}")]`;
+    const query = `*[_type == "orders" && references("${user_id}")]{status, total, vendor -> {store_name}}`;
     const data = await sanityClient.fetch(query);
 
     return data;

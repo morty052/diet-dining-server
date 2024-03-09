@@ -5,6 +5,7 @@ import {
   get_current_affiliate_id,
 } from "./features/auth.js";
 import { generate_otp } from "./features/generate-otp.js";
+import { registerCompanion } from "./features/registerCompanion.js";
 import {
   get_affiliate_stores,
   get_affiliate,
@@ -67,6 +68,15 @@ affiliateRouter.get("/confirm-affiliate-email", async (req, res) => {
 
   const status = await confirm_affiliate_email(affiliate_email);
   res.send(status);
+});
+
+affiliateRouter.get("/register-companion", async (req, res) => {
+  const { affiliate_email, expo_push_token } = req.query;
+  console.log("recaa");
+  console.log(affiliate_email);
+
+  const _id = await registerCompanion({ affiliate_email, expo_push_token });
+  res.send({ _id });
 });
 
 export default affiliateRouter;

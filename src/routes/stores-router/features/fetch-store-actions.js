@@ -44,6 +44,27 @@ export const get_stores_search_array = async () => {
   }
 };
 
+export const get_product_search_array = async () => {
+  try {
+    const query = `*[_type == "products"]{name, _id, image, price, category vendor -> {store_name}}`;
+    const data = await sanityClient.fetch(query);
+
+    const products = data?.map((product) => {
+      const image = urlFor(product.image).url();
+
+      return {
+        ...product,
+        store_name: product.vendor.store_name,
+        image,
+      };
+    });
+
+    return products;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const get_single_store = async (store_id) => {
   try {
     // const query = `*[_type == "stores" && _id == "${store_id}"]{..., store_products[]->{image, price, _id, name, description}}`;
@@ -111,27 +132,6 @@ export const get_single_product = async (product_id) => {
       },
       image: urlFor(product.image).url(),
     };
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-export const get_product_search_array = async () => {
-  try {
-    const query = `*[_type == "products"]{name, _id, image, price, vendor -> {store_name}}`;
-    const data = await sanityClient.fetch(query);
-
-    const products = data?.map((product) => {
-      const image = urlFor(product.image).url();
-
-      return {
-        ...product,
-        store_name: product.vendor.store_name,
-        image,
-      };
-    });
-
-    return products;
   } catch (error) {
     console.error(error);
   }

@@ -1,6 +1,6 @@
 import express from "../../lib/express.js";
 import { create_order } from "./features/create-order.js";
-import { get_all_orders } from "./features/fetch-orders.js";
+import { get_all_orders, get_user_orders } from "./features/fetch-orders.js";
 import { update_order_status } from "./features/update-order-status.js";
 
 const ordersRouter = express.Router();
@@ -44,6 +44,19 @@ ordersRouter.get("/get-all", async (req, res) => {
     });
   }
 });
+
+ordersRouter.get("/get-user-orders", async (req, res) => {
+  try {
+    const { user_id } = req.query;
+    const orders = await get_user_orders(user_id);
+    res.send(orders);
+  } catch (error) {
+    res.send({
+      status: "ERROR",
+    });
+  }
+});
+
 ordersRouter.post("/create", async (req, res) => {
   const { vendor, user_id } = req.body;
   await create_order({

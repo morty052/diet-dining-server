@@ -1,6 +1,6 @@
 import sanityClient from "../../../lib/sanityClient.js";
 
-export const create_like = async (user_id, item_id) => {
+export const create_like = async ({ user_id, item_id }) => {
   const newLike = {
     _type: "reference",
     _ref: item_id,
@@ -8,7 +8,12 @@ export const create_like = async (user_id, item_id) => {
 
   await sanityClient
     .patch(user_id)
-    .setIfMissing({ likes: [] })
-    .insert("after", "likes[-1]", newLike)
+    .setIfMissing({ liked: [] })
+    .insert("after", "liked[-1]", [
+      {
+        _type: "reference",
+        _ref: item_id,
+      },
+    ])
     .commit({ autoGenerateArrayKeys: true });
 };

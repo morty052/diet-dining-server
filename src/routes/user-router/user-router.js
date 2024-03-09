@@ -16,8 +16,11 @@ userRouter.get("/signup", async (req, res) => {
 
 userRouter.get("/like", async (req, res) => {
   const { user_id, item_id } = req.query;
-  await create_like(user_id, item_id);
-  res.send({});
+  console.log({ user_id, item_id });
+  await create_like({ user_id, item_id });
+  res.send({
+    success: true,
+  });
 });
 
 export default userRouter;

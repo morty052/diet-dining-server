@@ -5,6 +5,7 @@ import ordersRouter from "./orders-router/orders-router.js";
 import authRouter from "./auth-router/auth-router.js";
 import affiliateRouter from "./affiliate-router/affiliate-router.js";
 import webhooksRouter from "./webhooks-router/webhooks-router.js";
+import userRouter from "./user-router/user-router.js";
 
 export {
   storesRouter,
@@ -14,4 +15,5 @@ export {
   authRouter,
   affiliateRouter,
   webhooksRouter,
+  userRouter,
 };
