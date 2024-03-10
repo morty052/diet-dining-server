@@ -1,5 +1,6 @@
 import express from "../../lib/express.js";
 import { createUser } from "./createUser.js";
+import { handleLogin } from "./login.js";
 
 const authRouter = express.Router();
 
@@ -14,10 +15,13 @@ authRouter.get("/signup", async (req, res) => {
   res.send({ _id });
 });
 
-authRouter.post("/signup", async (req, res) => {
-  console.log(req.body);
-  const _id = await createUser(req.body);
-  res.send({ _id });
+authRouter.get("/signin", async (req, res) => {
+  const { user_email, user_password } = req.query;
+  const data = await handleLogin({
+    email: user_email,
+    password: user_password,
+  });
+  res.send(data);
 });
 
 export default authRouter;

@@ -6,6 +6,8 @@ import {
   get_single_store,
   get_stores_search_array,
   get_product_search_array,
+  get_stores_around_user,
+  get_top_stores_around_user,
 } from "./features/fetch-store-actions.js";
 import {
   create_store,
@@ -46,6 +48,26 @@ async function sendPushNotification(expoPushToken) {
 storesRouter.get("/get-all", async (req, res) => {
   const stores = await get_all_stores();
 
+  res.send(stores);
+});
+storesRouter.get("/get-stores-around", async (req, res) => {
+  // const stores = await get_all_stores();
+  const { latitude, longitude } = req.query;
+
+  const stores = await get_stores_around_user({
+    lat: latitude,
+    lng: longitude,
+  });
+
+  res.send(stores);
+});
+storesRouter.get("/get-top-stores-around", async (req, res) => {
+  // const stores = await get_all_stores();
+  const { latitude, longitude } = req.query;
+  const stores = await get_top_stores_around_user({
+    lat: latitude,
+    lng: longitude,
+  });
   res.send(stores);
 });
 

@@ -12,6 +12,9 @@ import {
 } from "./src/routes/index.js";
 import cors from "cors";
 import { identifyMeal } from "./src/lib/gemini.js";
+import sanityClient from "./src/lib/sanityClient.js";
+import { getDistanceBetween } from "./src/utils/get-distance-between.js";
+import { get_top_stores_around_user } from "./src/routes/stores-router/features/fetch-store-actions.js";
 
 const app = express();
 app.use(
@@ -59,16 +62,24 @@ async function sendPushNotification(expoPushToken) {
   console.log("sent");
 }
 
-app.get("/", (req, res) => {
-  res.send("reached me");
+app.get("/", async (req, res) => {
+  const { latitude, longitude } = req.query;
+  const data = await get_top_stores_around_user({
+    lat: latitude,
+    lng: longitude,
+  });
+  res.send({ data });
 });
 app.get("/send", async (req, res) => {
-  const { url } = req.query;
-  console.log(url);
-  const text = await identifyMeal(url);
-  console.log(text);
-  // sendPushNotification("ExponentPushToken[PnNzg8Gai1SXsYmVplsTFW]");
-  res.send({ text: "" });
+  const { lat, lng } = req.query;
+  // console.log(url);
+  // const text = await identifyMeal(url);
+  // console.log(text);
+  const encodedURI = encodeURI(url);
+  console.log(encodedURI);
+  const query = `geo::distance(geo::latLng(7.4367586, 3.970707), geo::latLng(7.4367505, 3.970707))`;
+  const data = await sanityClient.fetch(query);
+  res.send({ data });
 });
 app.post("/notifications", async (req, res) => {
   const message = req.body;

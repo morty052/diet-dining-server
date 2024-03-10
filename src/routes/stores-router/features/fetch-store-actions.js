@@ -1,4 +1,5 @@
 import sanityClient, { urlFor } from "../../../lib/sanityClient.js";
+import { getDistanceBetween } from "../../../utils/get-distance-between.js";
 
 export const get_all_stores = async () => {
   try {
@@ -183,6 +184,69 @@ export const get_single_store_preview = async (store_id) => {
     });
 
     return store;
+  } catch (error) {
+    console.error(error);
+  }
+};
+export const get_stores_around_user = async ({ lat, lng }) => {
+  try {
+    const query = `*[
+      _type == 'stores' && geo::distance(store_location, geo::latLng(${lat}, ${lng})) < 4893.4]`;
+    const data = await sanityClient.fetch(query);
+
+    const stores = await Promise.all(
+      data?.map(async (store) => {
+        const store_logo = urlFor(store.store_logo).url();
+        const store_image = urlFor(store.store_logo).url();
+
+        // get store distance
+        const distance = await getDistanceBetween({
+          origin: `${lat},${lng}`,
+          destination: `${store.store_location.lat},${store.store_location.lng}`,
+        });
+
+        return {
+          ...store,
+          store_logo,
+          store_image,
+          distance,
+        };
+      })
+    );
+
+    return stores;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const get_top_stores_around_user = async ({ lat, lng }) => {
+  try {
+    const query = `*[
+      _type == 'stores' && store_rating > 4  && geo::distance(store_location, geo::latLng(${lat}, ${lng})) < 7893.4]`;
+    const data = await sanityClient.fetch(query);
+
+    const stores = await Promise.all(
+      data?.map(async (store) => {
+        const store_logo = urlFor(store.store_logo).url();
+        const store_image = urlFor(store.store_logo).url();
+
+        // get store distance
+        const distance = await getDistanceBetween({
+          origin: `${lat},${lng}`,
+          destination: `${store.store_location.lat},${store.store_location.lng}`,
+        });
+
+        return {
+          ...store,
+          store_logo,
+          store_image,
+          distance,
+        };
+      })
+    );
+
+    return stores;
   } catch (error) {
     console.error(error);
   }
