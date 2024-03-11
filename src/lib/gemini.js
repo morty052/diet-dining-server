@@ -1,18 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import fs from "fs";
 
 // Access your API key as an environment variable (see "Set up your API key" above)
 const genAI = new GoogleGenerativeAI("AIzaSyCy7vSiIHXGOA6usPraWgGA5WZVG9YJFF4");
-
-// Converts local file information to a GoogleGenerativeAI.Part object.
-function fileToGenerativePart(path, mimeType) {
-  return {
-    inlineData: {
-      data: Buffer.from(fs.readFileSync(path)).toString("base64"),
-      mimeType,
-    },
-  };
-}
 
 const parts = [
   {
@@ -58,6 +47,23 @@ export async function identifyMeal(url) {
   };
 
   const result = await model.generateContent([prompt, image]);
+  const response = await result.response;
+  const text = response.text();
+  const markdown = text.replace("```json", "").replace("```", "");
+  return markdown;
+}
+
+export async function writeMealDescription(meal_name) {
+  // For text-and-image input (multimodal), use the gemini-pro-vision model
+  const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
+  const blob = await imageUrlToBase64(
+    "https://cupdzqjnmpepddawtukr.supabase.co/storage/v1/object/public/temp_images/public/1709903262032-min.jpg"
+  );
+
+  const prompt = `Write a short ad about 20 words max, of the following meal:${meal_name} `;
+
+  const result = await model.generateContent([prompt]);
   const response = await result.response;
   const text = response.text();
   const markdown = text.replace("```json", "").replace("```", "");

@@ -11,7 +11,7 @@ import {
   userRouter,
 } from "./src/routes/index.js";
 import cors from "cors";
-import { identifyMeal } from "./src/lib/gemini.js";
+import { identifyMeal, writeMealDescription } from "./src/lib/gemini.js";
 import sanityClient from "./src/lib/sanityClient.js";
 import { getDistanceBetween } from "./src/utils/get-distance-between.js";
 import { get_top_stores_around_user } from "./src/routes/stores-router/features/fetch-store-actions.js";
@@ -63,11 +63,8 @@ async function sendPushNotification(expoPushToken) {
 }
 
 app.get("/", async (req, res) => {
-  const { latitude, longitude } = req.query;
-  const data = await get_top_stores_around_user({
-    lat: latitude,
-    lng: longitude,
-  });
+  const { meal_name } = req.query;
+  const data = await writeMealDescription(meal_name);
   res.send({ data });
 });
 app.get("/send", async (req, res) => {

@@ -191,7 +191,7 @@ export const get_single_store_preview = async (store_id) => {
 export const get_stores_around_user = async ({ lat, lng }) => {
   try {
     const query = `*[
-      _type == 'stores' && geo::distance(store_location, geo::latLng(${lat}, ${lng})) < 4893.4]`;
+      _type == 'stores' && geo::distance(store_location, geo::latLng(${lat}, ${lng})) < 8893.4]`;
     const data = await sanityClient.fetch(query);
 
     const stores = await Promise.all(
@@ -200,7 +200,7 @@ export const get_stores_around_user = async ({ lat, lng }) => {
         const store_image = urlFor(store.store_logo).url();
 
         // get store distance
-        const distance = await getDistanceBetween({
+        const distanceData = await getDistanceBetween({
           origin: `${lat},${lng}`,
           destination: `${store.store_location.lat},${store.store_location.lng}`,
         });
@@ -209,7 +209,7 @@ export const get_stores_around_user = async ({ lat, lng }) => {
           ...store,
           store_logo,
           store_image,
-          distance,
+          distance: distanceData.distance,
         };
       })
     );
@@ -232,7 +232,7 @@ export const get_top_stores_around_user = async ({ lat, lng }) => {
         const store_image = urlFor(store.store_logo).url();
 
         // get store distance
-        const distance = await getDistanceBetween({
+        const distanceData = await getDistanceBetween({
           origin: `${lat},${lng}`,
           destination: `${store.store_location.lat},${store.store_location.lng}`,
         });
@@ -241,7 +241,7 @@ export const get_top_stores_around_user = async ({ lat, lng }) => {
           ...store,
           store_logo,
           store_image,
-          distance,
+          distance: distanceData.distance,
         };
       })
     );

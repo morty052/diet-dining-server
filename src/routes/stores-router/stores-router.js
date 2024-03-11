@@ -52,6 +52,8 @@ storesRouter.get("/get-all", async (req, res) => {
 });
 storesRouter.get("/get-stores-around", async (req, res) => {
   // const stores = await get_all_stores();
+
+  console.log("reached");
   const { latitude, longitude } = req.query;
 
   const stores = await get_stores_around_user({
