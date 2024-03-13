@@ -64,7 +64,7 @@ ordersRouter.post("/create", async (req, res) => {
     user_id,
     vendor,
   });
-  console.log("created");
+  console.log(vendor);
   // sendPushNotification("ExponentPushToken[ruarKdODJs7pAeDo4pW58P]");
   res.send("c");
 });

@@ -48,7 +48,7 @@ export const get_stores_search_array = async () => {
 export const get_product_search_array = async () => {
   console.log("reached");
   try {
-    const query = `*[_type == "products"]{name, _id, image, price, category, vendor -> {store_name}}`;
+    const query = `*[_type == "products"]{name, _id, image, price, category, description, vendor -> {store_name}}`;
     const data = await sanityClient.fetch(query);
 
     const products = data?.map((product) => {

@@ -26,7 +26,6 @@ async function sendPushNotification(expoPushToken) {
 }
 
 export const create_order = async ({ store_id, vendor, user_id }) => {
-  console.log(vendor);
   const products = vendor.vendorItems?.map((item) => ({
     product_reference: {
       _type: "reference",
@@ -52,6 +51,7 @@ export const create_order = async ({ store_id, vendor, user_id }) => {
       _ref: user_id,
     },
     products,
+    store_note: vendor.vendorNote,
   };
 
   console.log(order);
