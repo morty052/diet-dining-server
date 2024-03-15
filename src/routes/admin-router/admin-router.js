@@ -1,4 +1,6 @@
 import express from "../../lib/express.js";
+import { fetch_affiliates } from "./features/fetch-affiliates.js";
+import { fetch_orders } from "./features/fetch_orders.js";
 import {
   generate_otp,
   confirm_otp,
@@ -44,6 +46,16 @@ adminRouter.get("/confirm-admin-email", async (req, res) => {
 
   const status = await confirm_admin_email(admin_email);
   res.send(status);
+});
+
+adminRouter.get("/get-all-affiliates", async (req, res) => {
+  const { status, data } = await fetch_affiliates();
+  res.send({ status, data });
+});
+
+adminRouter.get("/get-all-orders", async (req, res) => {
+  const { status, data } = await fetch_orders();
+  res.send({ status, data });
 });
 
 export default adminRouter;
