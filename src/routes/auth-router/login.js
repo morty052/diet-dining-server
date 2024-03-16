@@ -2,18 +2,21 @@ import sanityClient from "../../lib/sanityClient.js";
 
 export async function handleLogin({ email, password }) {
   try {
-    const query = `*[_type == "users" && user_email == "${email}" && user_password == "${password}"]{_id}`;
+    const query = `*[_type == "users" && user_email == "${email}" && user_password == "${password}"]{_id, user_firstname}`;
     const data = await sanityClient.fetch(query);
 
     if (data.length === 0) {
       throw new Error("Invalid email or password");
     }
 
-    const _id = data[0]._id;
+    const { _id, user_firstname } = data[0];
+
+    console.log({ _id, user_firstname });
 
     return {
       status: "SUCCESS",
       _id,
+      user_firstname,
     };
   } catch (error) {
     if (error.message == "Invalid email or password") {

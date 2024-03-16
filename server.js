@@ -39,10 +39,10 @@ app.use("/user", userRouter);
 
 async function sendPushNotification(expoPushToken) {
   const message = {
-    to: "ExponentPushToken[OviGVrPaQmUO8KnyZe7e8M]",
+    to: "ExponentPushToken[MDwUCUKaFLSTcVM1ITuc0M]",
     sound: "default",
-    title: "God help us",
-    body: "Thanks for placing an order.",
+    title: "Hello there",
+    body: "Did you get this one too ?.",
     data: { someData: "goes here" },
   };
 
@@ -72,10 +72,12 @@ app.get("/send", async (req, res) => {
   // console.log(url);
   // const text = await identifyMeal(url);
   // console.log(text);
-  const encodedURI = encodeURI(url);
-  console.log(encodedURI);
-  const query = `geo::distance(geo::latLng(7.4367586, 3.970707), geo::latLng(7.4367505, 3.970707))`;
-  const data = await sanityClient.fetch(query);
+  await sendPushNotification();
+  // const encodedURI = encodeURI(url);
+  // console.log(encodedURI);
+  // const query = `geo::distance(geo::latLng(7.4367586, 3.970707), geo::latLng(7.4367505, 3.970707))`;
+  // const data = await sanityClient.fetch(query);
+  const data = {};
   res.send({ data });
 });
 app.post("/notifications", async (req, res) => {
