@@ -15,6 +15,7 @@ import { identifyMeal, writeMealDescription } from "./src/lib/gemini.js";
 import sanityClient from "./src/lib/sanityClient.js";
 import { getDistanceBetween } from "./src/utils/get-distance-between.js";
 import { get_top_stores_around_user } from "./src/routes/stores-router/features/fetch-store-actions.js";
+import { supabase } from "./src/lib/supabase.js";
 
 const app = express();
 app.use(
@@ -67,6 +68,16 @@ app.get("/", async (req, res) => {
   const data = await writeMealDescription(meal_name);
   res.send({ data });
 });
+
+app.get("/send-email", async (req, res) => {
+  const { username, affiliateImage } = req.query;
+  console.log(affiliateImage);
+  const { data, error } = await supabase.functions.invoke("resend", {
+    body: { username, affiliateImage },
+  });
+  res.send({ data });
+});
+
 app.get("/send", async (req, res) => {
   const { lat, lng } = req.query;
   // console.log(url);

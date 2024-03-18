@@ -11,8 +11,6 @@ export async function handleLogin({ email, password }) {
 
     const { _id, user_firstname } = data[0];
 
-    console.log({ _id, user_firstname });
-
     return {
       status: "SUCCESS",
       _id,

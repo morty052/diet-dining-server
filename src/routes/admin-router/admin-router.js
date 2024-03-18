@@ -54,6 +54,7 @@ adminRouter.get("/get-all-affiliates", async (req, res) => {
 });
 
 adminRouter.get("/get-all-orders", async (req, res) => {
+  console.log("reached");
   const { status, data } = await fetch_orders();
   res.send({ status, data });
 });

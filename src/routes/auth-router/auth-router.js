@@ -17,7 +17,7 @@ authRouter.get("/signup", async (req, res) => {
 
 authRouter.get("/signin", async (req, res) => {
   const { user_email, user_password } = req.query;
-  console.log("reached");
+
   const data = await handleLogin({
     email: user_email,
     password: user_password,
