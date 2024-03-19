@@ -12,4 +12,9 @@ utilityRouter.get("/get-all", async (req, res) => {
   res.send(stores);
 });
 
+utilityRouter.get("/register-companion", async (req, res) => {
+  const stores = await get_all_stores();
+  res.send(stores);
+});
+
 export default utilityRouter;

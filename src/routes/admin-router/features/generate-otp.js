@@ -1,8 +1,8 @@
 import sanityClient from "../../../lib/sanityClient.js";
 
-export const generate_otp = async (admin_id) => {
+export const generate_admin_otp = async (admin_id) => {
   try {
-    const otp = Math.floor(10000 + Math.random() * 90000);
+    const otp = Math.floor(100000 + Math.random() * 90000);
     await sanityClient
       .patch(admin_id)
       .set({ admin_active_otp: `${otp}` })
@@ -30,28 +30,31 @@ export const confirm_otp = async (admin_id, otp) => {
         status: "CONFIRMED",
       };
     } else {
-      return {
-        status: "REJECTED",
-      };
+      throw new Error("Invalid OTP");
     }
   } catch (error) {
     console.error(error);
     return {
-      status: "ERROR",
+      status: "REJECTED",
     };
   }
 };
-export const confirm_admin_email = async (admin_email) => {
-  const query = `*[_type == "admins" && admin_email == "${admin_email}"]._id`;
-  const data = await sanityClient.fetch(query);
-  const _id = data[0];
+export const confirm_admin_email = async (admin_email, admin_password) => {
+  try {
+    const query = `*[_type == "admins" && admin_email == "${admin_email}" && admin_password == "${admin_password}"]{_id, admin_firstname}`;
+    const data = await sanityClient.fetch(query);
 
-  if (_id) {
-    return {
-      status: "CONFIRMED",
-      _id,
-    };
-  } else {
+    if (data.length > 0) {
+      const { _id, admin_firstname } = data[0];
+      return {
+        status: "CONFIRMED",
+        _id,
+        firstname: admin_firstname,
+      };
+    } else {
+      throw new Error("Invalid email or password");
+    }
+  } catch (error) {
     return {
       status: "REJECTED",
     };

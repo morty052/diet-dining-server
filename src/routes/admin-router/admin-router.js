@@ -1,8 +1,12 @@
 import express from "../../lib/express.js";
+import {
+  register_admin_Companion,
+  set_admin_password,
+} from "./features/admin_auth.js";
 import { fetch_affiliates } from "./features/fetch-affiliates.js";
 import { fetch_orders } from "./features/fetch_orders.js";
 import {
-  generate_otp,
+  generate_admin_otp,
   confirm_otp,
   confirm_admin_email,
   get_current_admin,
@@ -25,7 +29,7 @@ adminRouter.get("/get-admin", async (req, res) => {
 adminRouter.get("/get-otp", async (req, res) => {
   const { admin_id } = req.query;
   console.log(admin_id);
-  const otp = await generate_otp(admin_id);
+  const otp = await generate_admin_otp(admin_id);
   res.send({
     otp,
   });
@@ -35,17 +39,31 @@ adminRouter.get("/confirm-otp", async (req, res) => {
   const { admin_id, otp } = req.query;
 
   const status = await confirm_otp(admin_id, otp);
-  res.send({
-    status,
-  });
+  res.send(status);
 });
 adminRouter.get("/confirm-admin-email", async (req, res) => {
-  const { admin_email } = req.query;
+  const { admin_email, admin_password } = req.query;
 
   console.log(admin_email);
 
-  const status = await confirm_admin_email(admin_email);
+  const status = await confirm_admin_email(admin_email, admin_password);
   res.send(status);
+});
+
+adminRouter.get("/set-password", async (req, res) => {
+  const { password, admin_id } = req.query;
+  const status = await set_admin_password({ password, admin_id });
+  res.send(status);
+});
+
+adminRouter.get("/register-companion", async (req, res) => {
+  const { admin_email, expo_push_token } = req.query;
+
+  const data = await register_admin_Companion({
+    admin_email,
+    expo_push_token,
+  });
+  res.send(data);
 });
 
 adminRouter.get("/get-all-affiliates", async (req, res) => {

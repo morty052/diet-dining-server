@@ -70,10 +70,10 @@ app.get("/", async (req, res) => {
 });
 
 app.get("/send-email", async (req, res) => {
-  const { username, affiliateImage } = req.query;
-  console.log(affiliateImage);
+  const { username, code } = req.query;
+  console.log(code);
   const { data, error } = await supabase.functions.invoke("resend", {
-    body: { username, affiliateImage },
+    body: { username, code },
   });
   res.send({ data });
 });
