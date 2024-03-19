@@ -1,5 +1,28 @@
 import sanityClient from "../../../lib/sanityClient.js";
+async function sendRegistrationNotification(expoPushToken) {
+  const message = {
+    to: expoPushToken,
+    sound: "default",
+    title: "Companion registered",
+    body: "Your Companion has been registered successfully.",
+    data: { someData: "goes here" },
+  };
 
+  try {
+    await fetch("https://exp.host/--/api/v2/push/send", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Accept-encoding": "gzip, deflate",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(message),
+    });
+  } catch (error) {
+    console.log(error);
+  }
+  console.log("sent");
+}
 export const registerCompanion = async ({
   affiliate_email,
   expo_push_token,
@@ -33,13 +56,15 @@ export const registerCompanion = async ({
 
 export const confirm_affiliate_companion = async ({ _id }) => {
   try {
-    const query = `*[_type == "affiliates" && _id == "${_id}"].expo_push_token`;
+    const query = `*[_type == "affiliates" && _id == "${_id}"]{expo_push_token}`;
 
     const data = await sanityClient.fetch(query);
 
     console.log(data);
 
     if (data?.[0]?.expo_push_token) {
+      await sanityClient.patch(_id).set({ onboarded: true }).commit();
+      await sendRegistrationNotification(data[0].expo_push_token);
       return {
         status: "CONFIRMED",
       };

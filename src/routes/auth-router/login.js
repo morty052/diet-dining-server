@@ -1,6 +1,6 @@
 import sanityClient from "../../lib/sanityClient.js";
 
-export async function handleLogin({ email, password }) {
+export async function handleLogin({ email, password, expo_push_token }) {
   try {
     const query = `*[_type == "users" && user_email == "${email}" && user_password == "${password}"]{_id, user_firstname}`;
     const data = await sanityClient.fetch(query);
@@ -10,6 +10,13 @@ export async function handleLogin({ email, password }) {
     }
 
     const { _id, user_firstname } = data[0];
+
+    await sanityClient
+      .patch(_id)
+      .set({
+        expo_push_token,
+      })
+      .commit();
 
     return {
       status: "SUCCESS",

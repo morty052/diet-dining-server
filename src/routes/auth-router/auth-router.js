@@ -16,11 +16,12 @@ authRouter.get("/signup", async (req, res) => {
 });
 
 authRouter.get("/signin", async (req, res) => {
-  const { user_email, user_password } = req.query;
+  const { user_email, user_password, expo_push_token } = req.query;
 
   const data = await handleLogin({
     email: user_email,
     password: user_password,
+    expo_push_token,
   });
   res.send(data);
 });

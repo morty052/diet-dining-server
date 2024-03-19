@@ -41,15 +41,16 @@ export const confirm_otp = async (admin_id, otp) => {
 };
 export const confirm_admin_email = async (admin_email, admin_password) => {
   try {
-    const query = `*[_type == "admins" && admin_email == "${admin_email}" && admin_password == "${admin_password}"]{_id, admin_firstname}`;
+    const query = `*[_type == "admins" && admin_email == "${admin_email}" && admin_password == "${admin_password}"]{_id, admin_firstname, onboarded}`;
     const data = await sanityClient.fetch(query);
 
     if (data.length > 0) {
-      const { _id, admin_firstname } = data[0];
+      const { _id, admin_firstname, onboarded } = data[0];
       return {
         status: "CONFIRMED",
         _id,
         firstname: admin_firstname,
+        onboarded,
       };
     } else {
       throw new Error("Invalid email or password");

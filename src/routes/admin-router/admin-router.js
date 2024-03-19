@@ -1,5 +1,6 @@
 import express from "../../lib/express.js";
 import {
+  confirm_admin_companion,
   register_admin_Companion,
   set_admin_password,
 } from "./features/admin_auth.js";
@@ -63,6 +64,15 @@ adminRouter.get("/register-companion", async (req, res) => {
     admin_email,
     expo_push_token,
   });
+  res.send(data);
+});
+
+adminRouter.get("/confirm-companion", async (req, res) => {
+  const { admin_id } = req.query;
+
+  console.log(admin_id);
+
+  const data = await confirm_admin_companion({ _id: admin_id });
   res.send(data);
 });
 
