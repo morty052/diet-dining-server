@@ -1,6 +1,7 @@
 import sanityClient from "../../lib/sanityClient.js";
 
 export async function handleLogin({ email, password, expo_push_token }) {
+  console.log("hedss");
   try {
     const query = `*[_type == "users" && user_email == "${email}" && user_password == "${password}"]{_id, user_firstname}`;
     const data = await sanityClient.fetch(query);
