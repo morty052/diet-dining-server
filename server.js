@@ -24,7 +24,7 @@ app.use(
   })
 );
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
   console.log("listening on port 3000");
 });
 app.use(json());
@@ -64,9 +64,9 @@ async function sendPushNotification(expoPushToken) {
 }
 
 app.get("/", async (req, res) => {
-  const { meal_name } = req.query;
-  const data = await writeMealDescription(meal_name);
-  res.send({ data });
+  // const { meal_name } = req.query;
+  // const data = await writeMealDescription(meal_name);
+  res.send("reachead restaurant young dev");
 });
 
 app.get("/send-email", async (req, res) => {
