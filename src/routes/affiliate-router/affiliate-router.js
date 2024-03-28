@@ -49,6 +49,12 @@ affiliateRouter.post("/add-product", async (req, res) => {
   res.send(data);
 });
 
+affiliateRouter.post("/edit-product", async (req, res) => {
+  const { affiliate_id } = req.query;
+  const data = await update_affiliate_products(affiliate_id, req.body);
+  res.send(data);
+});
+
 affiliateRouter.get("/get-otp", async (req, res) => {
   const { affiliate_id } = req.query;
   const otp = await generate_affiliate_otp(affiliate_id);
@@ -66,6 +72,15 @@ affiliateRouter.get("/confirm-otp", async (req, res) => {
 
 affiliateRouter.get("/confirm-affiliate-email", async (req, res) => {
   const { affiliate_email, password } = req.query;
+
+  console.log(affiliate_email);
+
+  const status = await confirm_affiliate_email(affiliate_email, password);
+  res.send(status);
+});
+
+affiliateRouter.post("/confirm-affiliate-email", async (req, res) => {
+  const { affiliate_email, password } = req.body;
 
   console.log(affiliate_email);
 

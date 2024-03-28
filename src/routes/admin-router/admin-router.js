@@ -47,7 +47,19 @@ adminRouter.get("/confirm-admin-email", async (req, res) => {
 
   console.log(admin_email);
 
-  const status = await confirm_admin_email(admin_email, admin_password);
+  const email = admin_email.toLowerCase();
+
+  const status = await confirm_admin_email(email, admin_password);
+  res.send(status);
+});
+
+adminRouter.post("/confirm-admin-email", async (req, res) => {
+  const { admin_email, admin_password } = req.body;
+
+  const email = admin_email.toLowerCase();
+  console.log(email);
+
+  const status = await confirm_admin_email(email, admin_password);
   res.send(status);
 });
 

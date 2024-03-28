@@ -190,8 +190,9 @@ export const get_single_store_preview = async (store_id) => {
 };
 export const get_stores_around_user = async ({ lat, lng }) => {
   try {
-    const query = `*[
-      _type == 'stores' && geo::distance(store_location, geo::latLng(${lat}, ${lng})) < 8893.4]`;
+    // const query = `*[
+    //   _type == 'stores' && geo::distance(store_location, geo::latLng(${lat}, ${lng})) < 8893.4]`;
+    const query = `*[_type == "stores" && preview == null]`;
     const data = await sanityClient.fetch(query);
 
     const stores = await Promise.all(

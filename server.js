@@ -11,7 +11,11 @@ import {
   userRouter,
 } from "./src/routes/index.js";
 import cors from "cors";
-import { identifyMeal, writeMealDescription } from "./src/lib/gemini.js";
+import {
+  identifyMeal,
+  writeMealDescription,
+  write_about_meal,
+} from "./src/lib/gemini.js";
 import sanityClient from "./src/lib/sanityClient.js";
 import { getDistanceBetween } from "./src/utils/get-distance-between.js";
 import { get_top_stores_around_user } from "./src/routes/stores-router/features/fetch-store-actions.js";
@@ -40,7 +44,7 @@ app.use("/user", userRouter);
 
 async function sendPushNotification(expoPushToken) {
   const message = {
-    to: "ExponentPushToken[MDwUCUKaFLSTcVM1ITuc0M]",
+    to: "ExponentPushToken[7VD4FSIKmiEleVcdQyNgzI]",
     sound: "default",
     title: "Hello there",
     body: "Did you get this one too ?.",
@@ -69,11 +73,27 @@ app.get("/", async (req, res) => {
   res.send("reachead restaurant young dev");
 });
 
+app.get("/write_about_meal", async (req, res) => {
+  const { meal_name } = req.query;
+  const data = await write_about_meal(meal_name);
+  res.send({
+    data: {
+      response: data,
+    },
+  });
+});
+
+app.get("/meal", async (req, res) => {
+  const { url } = req.query;
+  const data = await identifyMeal(url);
+  res.send({ data });
+});
+
 app.get("/send-email", async (req, res) => {
-  const { username, code } = req.query;
+  const { username, code, to } = req.query;
   console.log(code);
   const { data, error } = await supabase.functions.invoke("resend", {
-    body: { username, code },
+    body: { username, code, to },
   });
   res.send({ data });
 });

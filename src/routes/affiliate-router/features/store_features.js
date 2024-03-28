@@ -17,7 +17,11 @@ export const get_affiliate_orders = async (affiliate_id) => {
     const query = `*[_type == "affiliates" && _id == "${affiliate_id}"].orders[] -> {_createdAt,total,_id,status,location,products[]{...,product_reference -> {image, name, price,_id}}}`;
 
     const data = await sanityClient.fetch(query);
-    const orders = data.map((order) => {
+    if (!data[0]) {
+      console.log(data);
+      return [];
+    }
+    const orders = data?.map((order) => {
       return {
         ...order,
         products: order.products.map((product) => {
@@ -48,7 +52,7 @@ export const get_affiliate_stores = async (affiliate_id) => {
       const store_logo = urlFor(store.store_logo).url();
       const store_image = urlFor(store.store_image).url();
 
-      const menu = store.menu_categories.map((category) => {
+      const menu = store.menu_categories?.map((category) => {
         return {
           ...category,
           products: category.products.map((product) => ({
@@ -60,13 +64,13 @@ export const get_affiliate_stores = async (affiliate_id) => {
         };
       });
 
-      const categories = store.menu_categories.map((category) => {
+      const categories = store.menu_categories?.map((category) => {
         return {
           title: category.title,
         };
       });
 
-      const products = store.store_products.map((product) => {
+      const products = store.store_products?.map((product) => {
         const image = urlFor(product.image).url();
         return {
           ...product,
@@ -91,10 +95,13 @@ export const get_affiliate_stores = async (affiliate_id) => {
 
 export const update_affiliate_products = async (affiliate_id, newProduct) => {
   try {
+    // * query for store that references affiliate _id
     const storeQuery = `*[_type == "stores" && references("${affiliate_id}")]._id`;
     const data = await sanityClient.fetch(storeQuery);
+
+    // * get store to update
     const store_id = data[0];
-    console.log(store_id);
+
     const product = {
       ...newProduct,
       vendor: {
@@ -102,13 +109,40 @@ export const update_affiliate_products = async (affiliate_id, newProduct) => {
         _type: "reference",
       },
     };
+    // * create new product in database
     const { _id: product_id } = await sanityClient.create(product);
+
+    // * update store with new product
     await sanityClient
       .patch(store_id)
       .setIfMissing({ store_products: [] })
       .insert("after", "store_products[-1]", [
         { _type: "product", _ref: product_id },
       ])
+      .commit({ autoGenerateArrayKeys: true });
+    return {
+      status: "SUCCESS",
+      product_id,
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const edit_affiliate_product = async (affiliate_id, newProduct) => {
+  try {
+    const product = {
+      ...newProduct,
+      vendor: {
+        _ref: store_id,
+        _type: "reference",
+      },
+    };
+
+    // * update store with new product
+    await sanityClient
+      .patch(store_id)
+      .set({ ...product })
       .commit({ autoGenerateArrayKeys: true });
     return {
       status: "SUCCESS",

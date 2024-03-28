@@ -1,16 +1,17 @@
 import sanityClient from "../../lib/sanityClient.js";
 
-export const createUser = async (user_details) => {
+export const createUser = async ({
+  email,
+  expo_push_token,
+  password,
+  firstname,
+}) => {
   try {
-    const { email, password, lastname, firstname, expo_push_token } =
-      user_details;
-
     const user = {
       _type: "users",
       user_email: email,
       user_password: password,
       user_firstname: firstname,
-      user_lastname: lastname,
       expo_push_token,
     };
 

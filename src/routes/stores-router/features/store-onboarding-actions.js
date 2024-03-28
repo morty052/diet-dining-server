@@ -2,12 +2,17 @@ import sanityClient from "../../../lib/sanityClient.js";
 
 export const create_store = async (store) => {
   try {
+    // *get store owner id from store param
     const owner_id = store.owner._ref;
-    const { _id } = await sanityClient.create(store);
+    const newStore = {
+      ...store,
+      preview: true,
+    };
+    const { _id } = await sanityClient.create(newStore);
     // * Update store owner
     await sanityClient
       .patch(owner_id)
-      // * Add store reference to owner add temp pass to owner using store id
+      // * Add store reference to owner, add temp pass to owner using store id
       .set({ store: { _ref: _id, _type: "reference" }, password: _id })
       .commit();
     console.log(_id);

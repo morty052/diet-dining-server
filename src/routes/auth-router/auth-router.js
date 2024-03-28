@@ -9,9 +9,9 @@ authRouter.get("/", (req, res) => {
 });
 
 authRouter.get("/signup", async (req, res) => {
-  const { email, expo_push_token } = req.query;
+  const { email, expo_push_token, password, firstname } = req.query;
   console.log(email, expo_push_token);
-  const _id = await createUser(email, expo_push_token);
+  const _id = await createUser({ email, expo_push_token, password, firstname });
   res.send({ _id });
 });
 

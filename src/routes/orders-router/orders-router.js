@@ -58,11 +58,12 @@ ordersRouter.get("/get-user-orders", async (req, res) => {
 });
 
 ordersRouter.post("/create", async (req, res) => {
-  const { vendor, user_id } = req.body;
+  const { vendor, user_id, user_push_token } = req.body;
   await create_order({
     store_id: "bda93bf7-3060-46fd-bee4-692cabba7299",
     user_id,
     vendor,
+    user_push_token,
   });
   console.log(vendor);
   // sendPushNotification("ExponentPushToken[ruarKdODJs7pAeDo4pW58P]");
